@@ -16,7 +16,7 @@ class _ShadowPuppetScreenState extends State<ShadowPuppetScreen>
     with TickerProviderStateMixin {
   int _navIndex = 1;
   late List<PuppetCharacter> _chars;
-  List<String> _sequence = List.from(DummyData.storySequence);
+  final List<String> _sequence = List.from(DummyData.storySequence);
   bool _isPlayingStory = false;
 
   late AnimationController _floatController;
@@ -114,7 +114,7 @@ class _ShadowPuppetScreenState extends State<ShadowPuppetScreen>
                   color: AppTheme.ppPrimary.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.arrow_back_ios_new_rounded,
                   size: 16,
                   color: AppTheme.ppPrimary,
@@ -292,7 +292,7 @@ class _ShadowPuppetScreenState extends State<ShadowPuppetScreen>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               '✨ AI STORY',
               style: TextStyle(
                 fontSize: 9,

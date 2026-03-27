@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../theme/app_theme.dart';
 import './sign_language/sign_home_screen.dart';
-import './shadow_puppet/shadow_puppet_screen.dart';
+import './story_game/story_select_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -87,7 +87,7 @@ class HomeScreen extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 6),
-                        Text(
+                        const Text(
                           'Glove Connected',
                           style: TextStyle(
                             fontSize: 11,
@@ -113,7 +113,7 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              Text(
+              const Text(
                 'Put on the glove and pick a mode to begin.',
                 style: TextStyle(
                   fontSize: 14,
@@ -147,25 +147,25 @@ class HomeScreen extends StatelessWidget {
 
               const SizedBox(height: 16),
 
-              // Shadow Puppet Card
+              // Interactive Story Game Card
               _ModeCard(
-                emoji: '🎭',
+                emoji: '🕉️',
                 tag: 'Module 02',
-                title: 'Shadow Puppet Storytelling',
+                title: 'Interactive Story Game',
                 description:
-                    'Gesture to summon shadow puppet characters and build an AI-narrated story.',
+                    'Play through Ramayana tales and make gesture choices at checkpoints to shape the narrative.',
                 color1: AppTheme.ppPrimary,
                 color2: const Color(0xFFFBBF24),
                 glowColor: AppTheme.ppPrimary,
                 features: const [
-                  '20+ characters',
-                  'Live silhouettes',
-                  'AI story'
+                  'Ramayana stories',
+                  'Gesture choices',
+                  'Multiple endings'
                 ],
                 onTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (_) => const ShadowPuppetScreen())),
+                        builder: (_) => const StorySelectScreen())),
               ),
 
               const SizedBox(height: 32),
@@ -317,7 +317,7 @@ class _ModeCardState extends State<_ModeCard>
                       const SizedBox(height: 6),
                       Text(
                         widget.description,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 13,
                           color: AppTheme.muted,
                           fontWeight: FontWeight.w400,

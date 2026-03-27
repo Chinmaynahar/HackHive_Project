@@ -59,7 +59,7 @@ class _SignHomeScreenState extends State<SignHomeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'Good morning 👋',
                     style: TextStyle(fontSize: 12, color: AppTheme.muted),
                   ),
@@ -317,7 +317,7 @@ class _LessonRow extends StatelessWidget {
                   children: [
                     Text(
                       lesson.title,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
                         color: AppTheme.inkDark,
@@ -348,7 +348,7 @@ class _LessonRow extends StatelessWidget {
                     color: AppTheme.slPrimary.withOpacity(0.15),
                     borderRadius: BorderRadius.circular(100),
                   ),
-                  child: Text(
+                  child: const Text(
                     'GO →',
                     style: TextStyle(
                       fontSize: 11,

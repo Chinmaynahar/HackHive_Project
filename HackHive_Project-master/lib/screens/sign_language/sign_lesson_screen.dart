@@ -116,7 +116,7 @@ class _SignLessonScreenState extends State<SignLessonScreen>
                   color: AppTheme.slPrimary.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.arrow_back_ios_new_rounded,
                   size: 16,
                   color: AppTheme.slPrimary,
@@ -209,7 +209,7 @@ class _SignLessonScreenState extends State<SignLessonScreen>
         ),
         child: Column(
           children: [
-            Text(
+            const Text(
               'PERFORM THIS SIGN',
               style: TextStyle(
                 fontSize: 11,
@@ -301,7 +301,7 @@ class _SignLessonScreenState extends State<SignLessonScreen>
           border: Border.all(
               color: AppTheme.amber.withOpacity(0.3), width: 1.5),
         ),
-        child: Row(
+        child: const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
@@ -312,7 +312,7 @@ class _SignLessonScreenState extends State<SignLessonScreen>
                 color: AppTheme.amber,
               ),
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Text(
               'Analysing gesture...',
               style: TextStyle(
@@ -356,11 +356,11 @@ class _SignLessonScreenState extends State<SignLessonScreen>
   }
 
   Widget _buildStepChips() {
-    final statusForIndex = (int i) {
+    LessonStatus statusForIndex(int i) {
       if (i < _currentStep) return LessonStatus.completed;
       if (i == _currentStep) return LessonStatus.inProgress;
       return LessonStatus.locked;
-    };
+    }
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
