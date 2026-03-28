@@ -108,6 +108,7 @@ class StoryScene {
   final String narration;
   final String? speakerName;
   final String sceneEmoji;
+  final String? videoAsset;
   final String bgGradientStart;
   final String bgGradientEnd;
   final ParticleType particles;
@@ -117,11 +118,13 @@ class StoryScene {
   final StoryCheckpoint? checkpoint;
   final bool isEnding;
   final String? endingTitle;
+  final int? retrySceneIndex;
 
   const StoryScene({
     required this.narration,
     this.speakerName,
     required this.sceneEmoji,
+    this.videoAsset,
     this.bgGradientStart = '0xFF0B1120',
     this.bgGradientEnd = '0xFF1A1A2E',
     this.particles = ParticleType.none,
@@ -131,6 +134,7 @@ class StoryScene {
     this.checkpoint,
     this.isEnding = false,
     this.endingTitle,
+    this.retrySceneIndex,
   });
 }
 
