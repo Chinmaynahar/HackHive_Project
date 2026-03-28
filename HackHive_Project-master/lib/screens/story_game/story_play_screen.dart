@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:video_player/video_player.dart';
 import '../../models/models.dart';
 import '../../theme/app_theme.dart';
 
@@ -34,6 +35,8 @@ class _StoryPlayScreenState extends State<StoryPlayScreen>
 
   // Cinematic transition
   bool _fadeToBlack = false;
+  VideoPlayerController? _videoController;
+  String? _videoError;
 
   // Animations
   late AnimationController _fadeController;
@@ -90,6 +93,7 @@ class _StoryPlayScreenState extends State<StoryPlayScreen>
     _particleController.dispose();
     _chapterFadeCtrl.dispose();
     _stopwatch.stop();
+    _videoController?.dispose();
     super.dispose();
   }
 
@@ -106,9 +110,29 @@ class _StoryPlayScreenState extends State<StoryPlayScreen>
       _selectedLetter = null;
       _optionLocked = false;
       _fadeToBlack = false;
+      _videoError = null;
     });
 
     _choiceTimer?.cancel();
+
+    final newAsset = _currentScene.videoAsset;
+    if (newAsset != null && _videoController?.dataSource != newAsset) {
+      final oldController = _videoController;
+      final vCtrl = VideoPlayerController.asset(newAsset)
+        ..setLooping(true)
+        ..setVolume(0);
+      _videoController = vCtrl;
+      vCtrl.initialize().then((_) {
+        if (mounted && _videoController == vCtrl) {
+          setState(() {});
+          vCtrl.play();
+        }
+      }).catchError((e) {
+        if (mounted) setState(() => _videoError = 'Video Load Error: $e');
+        debugPrint("Error loading video (missing or invalid): $e");
+      });
+      oldController?.dispose();
+    } // If newAsset is null, allow the current video to keep playing.
 
     // Show chapter card if applicable
     if (_currentScene.chapterTitle != null) {
@@ -253,6 +277,7 @@ class _StoryPlayScreenState extends State<StoryPlayScreen>
     final minutes = _stopwatch.elapsed.inMinutes;
     final seconds = _stopwatch.elapsed.inSeconds % 60;
     final endingTitle = _currentScene.endingTitle ?? 'Story Complete';
+    final isRetry = _currentScene.retrySceneIndex != null;
 
     showDialog(
       context: context,
@@ -281,7 +306,7 @@ class _StoryPlayScreenState extends State<StoryPlayScreen>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('🏆', style: TextStyle(fontSize: 48)),
+              Text(isRetry ? '⚠️' : '🏆', style: const TextStyle(fontSize: 48)),
               const SizedBox(height: 10),
               Text(
                 endingTitle,
@@ -322,8 +347,16 @@ class _StoryPlayScreenState extends State<StoryPlayScreen>
               const SizedBox(height: 24),
               GestureDetector(
                 onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pop(context);
+                  if (isRetry) {
+                    Navigator.pop(context); // Close dialog
+                    setState(() {
+                      _currentSceneIndex = _currentScene.retrySceneIndex!;
+                    });
+                    _startScene();
+                  } else {
+                    Navigator.pop(context); // Close dialog
+                    Navigator.pop(context); // Leave Story Play screen
+                  }
                 },
                 child: Container(
                   width: double.infinity,
@@ -337,7 +370,7 @@ class _StoryPlayScreenState extends State<StoryPlayScreen>
                   ),
                   alignment: Alignment.center,
                   child: Text(
-                    'Continue',
+                    isRetry ? 'Retry from Checkpoint' : 'Complete Story',
                     style: GoogleFonts.outfit(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
@@ -380,6 +413,31 @@ class _StoryPlayScreenState extends State<StoryPlayScreen>
               ),
             ),
           ),
+
+          // Video Background
+          if (_videoController != null && _videoController!.value.isInitialized)
+            Positioned.fill(
+              child: Opacity(
+                opacity: 0.6, // Blend with background slightly
+                child: FittedBox(
+                  fit: BoxFit.cover,
+                  child: SizedBox(
+                    width: _videoController!.value.size.width,
+                    height: _videoController!.value.size.height,
+                    child: VideoPlayer(_videoController!),
+                  ),
+                ),
+              ),
+            ),
+
+          if (_videoError != null)
+            Center(
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                color: Colors.black87,
+                child: Text(_videoError!, style: const TextStyle(color: Colors.red)),
+              ),
+            ),
 
           // Particle effects
           if (scene.particles != ParticleType.none)
@@ -437,12 +495,7 @@ class _StoryPlayScreenState extends State<StoryPlayScreen>
                         child: Column(
                           children: [
                             const SizedBox(height: 10),
-                            // Character portraits
-                            if (scene.characters.isNotEmpty)
-                              _buildCharacterPortraits(scene),
                             const SizedBox(height: 16),
-                            // Scene emoji
-                            _buildSceneEmoji(scene),
                             const SizedBox(height: 20),
                             // Dialogue box
                             _buildDialogueBox(scene),
@@ -1034,23 +1087,36 @@ class _StoryPlayScreenState extends State<StoryPlayScreen>
   }
 
   Widget _buildEndingButton() {
+    final isRetry = _currentScene.retrySceneIndex != null;
+
     return GestureDetector(
-      onTap: _showCompletionDialog,
+      onTap: () {
+        if (isRetry) {
+          setState(() {
+            _currentSceneIndex = _currentScene.retrySceneIndex!;
+          });
+          _startScene();
+        } else {
+          _showCompletionDialog();
+        }
+      },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 13),
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [AppTheme.ppPrimary, Color(0xFFFBBF24)],
+          gradient: LinearGradient(
+            colors: isRetry 
+                ? [AppTheme.error, Colors.deepOrange]
+                : [AppTheme.ppPrimary, const Color(0xFFFBBF24)],
           ),
           borderRadius: BorderRadius.circular(100),
-          boxShadow: AppTheme.glowShadow(AppTheme.ppPrimary),
+          boxShadow: AppTheme.glowShadow(isRetry ? AppTheme.error : AppTheme.ppPrimary),
         ),
         child: Text(
-          '🏆 Complete Story',
+          isRetry ? '⚠️ Retry from Checkpoint' : '🏆 Complete Story',
           style: GoogleFonts.outfit(
             fontSize: 13,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFF1A1200),
+            color: isRetry ? Colors.white : const Color(0xFF1A1200),
           ),
         ),
       ),

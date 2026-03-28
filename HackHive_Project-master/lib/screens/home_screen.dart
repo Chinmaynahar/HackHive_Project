@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../theme/app_theme.dart';
@@ -151,16 +153,15 @@ class HomeScreen extends StatelessWidget {
               _ModeCard(
                 iconData: Icons.auto_stories_rounded,
                 tag: 'Module 02',
-                title: 'Interactive Story Game',
+                title: 'Indian Interactive Story Game',
                 description:
-                    'Play through Ramayana tales and make gesture choices at checkpoints to shape the narrative.',
+                    'Play through Indian tales and make gesture choices at checkpoints to shape the narrative.',
                 color1: AppTheme.ppPrimary,
                 color2: const Color(0xFFFBBF24),
                 glowColor: AppTheme.ppPrimary,
                 features: const [
-                  'Ramayana stories',
+                  'Indian stories',
                   'Gesture choices',
-                  'Multiple endings'
                 ],
                 onTap: () => Navigator.push(
                     context,
