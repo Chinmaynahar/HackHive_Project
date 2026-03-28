@@ -108,7 +108,7 @@ class StoryScene {
   final String narration;
   final String? speakerName;
   final String sceneEmoji;
-  final String? videoAsset;
+  final String? sceneImage;
   final String bgGradientStart;
   final String bgGradientEnd;
   final ParticleType particles;
@@ -124,7 +124,7 @@ class StoryScene {
     required this.narration,
     this.speakerName,
     required this.sceneEmoji,
-    this.videoAsset,
+    this.sceneImage,
     this.bgGradientStart = '0xFF0B1120',
     this.bgGradientEnd = '0xFF1A1A2E',
     this.particles = ParticleType.none,

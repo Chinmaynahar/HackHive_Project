@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:video_player/video_player.dart';
 import '../../models/models.dart';
 import '../../theme/app_theme.dart';
 
@@ -35,8 +34,6 @@ class _StoryPlayScreenState extends State<StoryPlayScreen>
 
   // Cinematic transition
   bool _fadeToBlack = false;
-  VideoPlayerController? _videoController;
-  String? _videoError;
 
   // Animations
   late AnimationController _fadeController;
@@ -93,7 +90,6 @@ class _StoryPlayScreenState extends State<StoryPlayScreen>
     _particleController.dispose();
     _chapterFadeCtrl.dispose();
     _stopwatch.stop();
-    _videoController?.dispose();
     super.dispose();
   }
 
@@ -110,29 +106,9 @@ class _StoryPlayScreenState extends State<StoryPlayScreen>
       _selectedLetter = null;
       _optionLocked = false;
       _fadeToBlack = false;
-      _videoError = null;
     });
 
     _choiceTimer?.cancel();
-
-    final newAsset = _currentScene.videoAsset;
-    if (newAsset != null && _videoController?.dataSource != newAsset) {
-      final oldController = _videoController;
-      final vCtrl = VideoPlayerController.asset(newAsset)
-        ..setLooping(true)
-        ..setVolume(0);
-      _videoController = vCtrl;
-      vCtrl.initialize().then((_) {
-        if (mounted && _videoController == vCtrl) {
-          setState(() {});
-          vCtrl.play();
-        }
-      }).catchError((e) {
-        if (mounted) setState(() => _videoError = 'Video Load Error: $e');
-        debugPrint("Error loading video (missing or invalid): $e");
-      });
-      oldController?.dispose();
-    } // If newAsset is null, allow the current video to keep playing.
 
     // Show chapter card if applicable
     if (_currentScene.chapterTitle != null) {
@@ -414,28 +390,36 @@ class _StoryPlayScreenState extends State<StoryPlayScreen>
             ),
           ),
 
-          // Video Background
-          if (_videoController != null && _videoController!.value.isInitialized)
+          // Scene Image Background
+          if (scene.sceneImage != null)
             Positioned.fill(
-              child: Opacity(
-                opacity: 0.6, // Blend with background slightly
-                child: FittedBox(
+              child: AnimatedOpacity(
+                opacity: 0.55,
+                duration: const Duration(milliseconds: 600),
+                child: Image.asset(
+                  scene.sceneImage!,
                   fit: BoxFit.cover,
-                  child: SizedBox(
-                    width: _videoController!.value.size.width,
-                    height: _videoController!.value.size.height,
-                    child: VideoPlayer(_videoController!),
-                  ),
+                  errorBuilder: (_, __, ___) => const SizedBox.shrink(),
                 ),
               ),
             ),
 
-          if (_videoError != null)
-            Center(
+          // Dark overlay for readability
+          if (scene.sceneImage != null)
+            Positioned.fill(
               child: Container(
-                padding: const EdgeInsets.all(16),
-                color: Colors.black87,
-                child: Text(_videoError!, style: const TextStyle(color: Colors.red)),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.black.withOpacity(0.3),
+                      Colors.black.withOpacity(0.5),
+                      Colors.black.withOpacity(0.7),
+                    ],
+                    stops: const [0.0, 0.5, 1.0],
+                  ),
+                ),
               ),
             ),
 
