@@ -34,7 +34,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                     alignment: Alignment.center,
                     child:
-                        const Text('🤚', style: TextStyle(fontSize: 20)),
+                        const Icon(Icons.back_hand_rounded, size: 20, color: Colors.white),
                   ),
                   const SizedBox(width: 10),
                   RichText(
@@ -126,7 +126,7 @@ class HomeScreen extends StatelessWidget {
 
               // Sign Language Card
               _ModeCard(
-                emoji: '🤟',
+                iconData: Icons.sign_language_rounded,
                 tag: 'Module 01',
                 title: 'Sign Language Learning',
                 description:
@@ -149,7 +149,7 @@ class HomeScreen extends StatelessWidget {
 
               // Interactive Story Game Card
               _ModeCard(
-                emoji: '🕉️',
+                iconData: Icons.auto_stories_rounded,
                 tag: 'Module 02',
                 title: 'Interactive Story Game',
                 description:
@@ -168,18 +168,7 @@ class HomeScreen extends StatelessWidget {
                         builder: (_) => const StorySelectScreen())),
               ),
 
-              const SizedBox(height: 32),
-
-              // Quick stats
-              const Row(
-                children: [
-                  _QuickStat(emoji: '🔥', label: '14 day streak'),
-                  SizedBox(width: 10),
-                  _QuickStat(emoji: '✅', label: '42 gestures done'),
-                  SizedBox(width: 10),
-                  _QuickStat(emoji: '⭐', label: 'Level 4'),
-                ],
-              ),
+              // Quick stats section removed
             ],
           ),
         ),
@@ -189,13 +178,14 @@ class HomeScreen extends StatelessWidget {
 }
 
 class _ModeCard extends StatefulWidget {
-  final String emoji, tag, title, description;
+  final IconData iconData;
+  final String tag, title, description;
   final Color color1, color2, glowColor;
   final List<String> features;
   final VoidCallback onTap;
 
   const _ModeCard({
-    required this.emoji,
+    required this.iconData,
     required this.tag,
     required this.title,
     required this.description,
@@ -279,8 +269,8 @@ class _ModeCardState extends State<_ModeCard>
                     children: [
                       Row(
                         children: [
-                          Text(widget.emoji,
-                              style: const TextStyle(fontSize: 32)),
+                          Icon(widget.iconData,
+                              size: 32, color: widget.color1),
                           const Spacer(),
                           Container(
                             padding: const EdgeInsets.symmetric(
@@ -401,35 +391,3 @@ class _ModeCardState extends State<_ModeCard>
   }
 }
 
-class _QuickStat extends StatelessWidget {
-  final String emoji, label;
-  const _QuickStat({required this.emoji, required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        decoration: AppTheme.glassCard(
-          glowColor: AppTheme.slPrimary,
-          borderRadius: 14,
-        ),
-        child: Column(
-          children: [
-            Text(emoji, style: const TextStyle(fontSize: 20)),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              style: const TextStyle(
-                fontSize: 10,
-                fontWeight: FontWeight.w600,
-                color: AppTheme.muted,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}

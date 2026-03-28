@@ -20,18 +20,10 @@ class DummyData {
   static final List<Lesson> lessons = [
     const Lesson(
       id: 'l1',
-      title: 'Alphabets A–F',
+      title: 'Alphabets A-Z',
       emoji: '✅',
-      totalGestures: 6,
-      completedGestures: 6,
-      status: LessonStatus.completed,
-    ),
-    const Lesson(
-      id: 'l2',
-      title: 'Greetings',
-      emoji: '🖐️',
-      totalGestures: 6,
-      completedGestures: 3,
+      totalGestures: 26,
+      completedGestures: 0,
       status: LessonStatus.inProgress,
     ),
     const Lesson(
@@ -40,26 +32,38 @@ class DummyData {
       emoji: '🔢',
       totalGestures: 10,
       completedGestures: 0,
-      status: LessonStatus.locked,
-    ),
-    const Lesson(
-      id: 'l4',
-      title: 'Common Words',
-      emoji: '💬',
-      totalGestures: 8,
-      completedGestures: 0,
-      status: LessonStatus.locked,
+      status: LessonStatus.inProgress,
     ),
   ];
 
   // ── Gesture steps (active lesson) ─────────────
-  static final List<GestureStep> greetingSteps = [
-    const GestureStep(word: 'Hi',    emoji: '👋', instruction: 'Wave your hand side to side'),
-    const GestureStep(word: 'Bye',   emoji: '🤚', instruction: 'Open palm, move outward'),
-    const GestureStep(word: 'Hello', emoji: '🤚', instruction: 'Flat hand at forehead, move outward'),
-    const GestureStep(word: 'Thanks',emoji: '🙏', instruction: 'Touch chin, move hand outward'),
-    const GestureStep(word: 'Sorry', emoji: '✊', instruction: 'Fist on chest, circular motion'),
-    const GestureStep(word: 'Please',emoji: '🖐️', instruction: 'Flat hand on chest, circular motion'),
+  static final List<GestureStep> alphabetSteps = [
+    const GestureStep(word: 'A', emoji: '', instruction: 'Fist with thumb resting against the index finger'),
+    const GestureStep(word: 'B', emoji: '', instruction: 'Flat hand with fingers together, thumb tucked over palm'),
+    const GestureStep(word: 'C', emoji: '', instruction: 'Fingers and thumb curved to form a C shape'),
+    const GestureStep(word: 'D', emoji: '', instruction: 'Index finger pointing up, thumb touching curved middle fingers'),
+    const GestureStep(word: 'E', emoji: '', instruction: 'Fingers curled inward touching the thumb resting across palm'),
+    const GestureStep(word: 'F', emoji: '', instruction: 'Tip of index finger touching tip of thumb, other fingers straight'),
+    const GestureStep(word: 'G', emoji: '', instruction: 'Index finger and thumb pointing forward parallel, others curled'),
+    const GestureStep(word: 'H', emoji: '', instruction: 'Index and middle fingers pointing forward together, thumb tucked'),
+    const GestureStep(word: 'I', emoji: '', instruction: 'Pinky finger pointing straight up, fist closed'),
+    const GestureStep(word: 'J', emoji: '', instruction: 'Pinky finger points up and scoops down in a J curve'),
+    const GestureStep(word: 'K', emoji: '', instruction: 'Index and middle fingers form a V, thumb placed between them'),
+    const GestureStep(word: 'L', emoji: '', instruction: 'Thumb and index finger form an L shape, other fingers curled'),
+    const GestureStep(word: 'M', emoji: '', instruction: 'Fist with thumb tucked under first three fingers'),
+    const GestureStep(word: 'N', emoji: '', instruction: 'Fist with thumb tucked under first two fingers'),
+    const GestureStep(word: 'O', emoji: '', instruction: 'Fingers curve to touch thumb forming an O shape'),
+    const GestureStep(word: 'P', emoji: '', instruction: 'Like a K but pointing downward'),
+    const GestureStep(word: 'Q', emoji: '', instruction: 'Like a G but pointing downward'),
+    const GestureStep(word: 'R', emoji: '', instruction: 'Index and middle fingers crossed, other fingers closed'),
+    const GestureStep(word: 'S', emoji: '', instruction: 'Fist with thumb wrapped across the front of fingers'),
+    const GestureStep(word: 'T', emoji: '', instruction: 'Fist with thumb tucked under index finger'),
+    const GestureStep(word: 'U', emoji: '', instruction: 'Index and middle fingers straight up and together'),
+    const GestureStep(word: 'V', emoji: '', instruction: 'Index and middle fingers straight up and apart (V shape)'),
+    const GestureStep(word: 'W', emoji: '', instruction: 'Index, middle, and ring fingers straight up and apart'),
+    const GestureStep(word: 'X', emoji: '', instruction: 'Fist with index finger bent into a hook'),
+    const GestureStep(word: 'Y', emoji: '', instruction: 'Thumb and pinky extended out, other fingers curled in'),
+    const GestureStep(word: 'Z', emoji: '', instruction: 'Index finger points and traces a Z shape in the air'),
   ];
 
   // ── Puppet characters ─────────────────────────

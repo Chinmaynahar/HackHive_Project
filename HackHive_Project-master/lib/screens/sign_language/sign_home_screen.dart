@@ -33,7 +33,6 @@ class _SignHomeScreenState extends State<SignHomeScreen> {
                     _buildHeader(user),
                     _buildXpBar(user),
                     _buildDailyGoal(),
-                    _buildStatChips(user),
                     const SectionLabel('Continue Learning'),
                     _buildLessonList(),
                     const SizedBox(height: 12),
@@ -55,15 +54,26 @@ class _SignHomeScreenState extends State<SignHomeScreen> {
         padding: const EdgeInsets.fromLTRB(18, 14, 18, 4),
         child: Row(
           children: [
+            GestureDetector(
+              onTap: () => Navigator.pop(context),
+              child: Container(
+                margin: const EdgeInsets.only(right: 12),
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: AppTheme.slPrimary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(
+                  Icons.arrow_back_ios_new_rounded,
+                  size: 16,
+                  color: AppTheme.slPrimary,
+                ),
+              ),
+            ),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Good morning 👋',
-                    style: TextStyle(fontSize: 12, color: AppTheme.muted),
-                  ),
-                  const SizedBox(height: 2),
                   Text(
                     "${user.name}'s Learning",
                     style: GoogleFonts.outfit(
@@ -87,7 +97,7 @@ class _SignHomeScreenState extends State<SignHomeScreen> {
               ),
               child: Row(
                 children: [
-                  const Text('🔥', style: TextStyle(fontSize: 13)),
+                  const Icon(Icons.local_fire_department_rounded, size: 13, color: AppTheme.amber),
                   const SizedBox(width: 4),
                   Text(
                     '${user.streakDays}',
@@ -150,7 +160,7 @@ class _SignHomeScreenState extends State<SignHomeScreen> {
         ),
         child: Row(
           children: [
-            const Text('🎯', style: TextStyle(fontSize: 28)),
+            const Icon(Icons.track_changes_rounded, size: 28, color: Colors.white),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
@@ -193,50 +203,6 @@ class _SignHomeScreenState extends State<SignHomeScreen> {
                 fontWeight: FontWeight.w800,
                 color: Colors.white.withOpacity(0.9),
               ),
-            ),
-          ],
-        ),
-      );
-
-  Widget _buildStatChips(UserStats user) => SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.fromLTRB(14, 4, 14, 8),
-        child: Row(
-          children: [
-            StatChip(
-              emoji: '🔥',
-              value: '${user.streakDays} days',
-              label: 'Streak',
-              bg: AppTheme.amberLight,
-              textColor: AppTheme.amber,
-              borderColor: AppTheme.amber.withOpacity(0.3),
-            ),
-            const SizedBox(width: 8),
-            StatChip(
-              emoji: '🏆',
-              value: 'Top 10%',
-              label: 'Ranking',
-              bg: AppTheme.successLight,
-              textColor: AppTheme.success,
-              borderColor: AppTheme.success.withOpacity(0.3),
-            ),
-            const SizedBox(width: 8),
-            StatChip(
-              emoji: '✅',
-              value: '${user.totalCompleted} done',
-              label: 'Gestures',
-              bg: AppTheme.slPrimaryLight,
-              textColor: AppTheme.slPrimary,
-              borderColor: AppTheme.slPrimary.withOpacity(0.3),
-            ),
-            const SizedBox(width: 8),
-            StatChip(
-              emoji: '⚡',
-              value: user.badge,
-              label: 'Badge',
-              bg: const Color(0xFF0C1A3D),
-              textColor: const Color(0xFF60A5FA),
-              borderColor: const Color(0xFF60A5FA).withOpacity(0.3),
             ),
           ],
         ),
@@ -305,9 +271,10 @@ class _LessonRow extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 alignment: Alignment.center,
-                child: Text(
-                  isLocked ? '🔒' : lesson.emoji,
-                  style: const TextStyle(fontSize: 17),
+                child: Icon(
+                  isLocked ? Icons.lock_rounded : Icons.back_hand_rounded,
+                  size: 17,
+                  color: isDone ? Colors.white : AppTheme.slPrimary,
                 ),
               ),
               const SizedBox(width: 12),
@@ -339,7 +306,7 @@ class _LessonRow extends StatelessWidget {
                 ),
               ),
               if (isDone)
-                const Text('⭐', style: TextStyle(fontSize: 14))
+                const Icon(Icons.star_rounded, size: 14, color: AppTheme.slPrimary)
               else if (isActive)
                 Container(
                   padding:
@@ -358,7 +325,7 @@ class _LessonRow extends StatelessWidget {
                   ),
                 )
               else
-                const Text('🔒', style: TextStyle(fontSize: 13)),
+                const Icon(Icons.lock_rounded, size: 13, color: AppTheme.muted),
             ],
           ),
         ),

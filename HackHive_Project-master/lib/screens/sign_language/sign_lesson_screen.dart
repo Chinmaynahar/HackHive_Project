@@ -4,6 +4,7 @@ import '../../data/dummy_data.dart';
 import '../../models/models.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/shared_widgets.dart';
+import '../../data/asl_images.dart';
 
 class SignLessonScreen extends StatefulWidget {
   const SignLessonScreen({super.key});
@@ -21,7 +22,7 @@ class _SignLessonScreenState extends State<SignLessonScreen>
   late AnimationController _scanController;
   late Animation<double> _scanAnim;
 
-  final _steps = DummyData.greetingSteps;
+  final _steps = DummyData.alphabetSteps;
 
   @override
   void initState() {
@@ -124,32 +125,6 @@ class _SignLessonScreenState extends State<SignLessonScreen>
               ),
             ),
             const Spacer(),
-            Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-              decoration: BoxDecoration(
-                color: AppTheme.amberLight,
-                borderRadius: BorderRadius.circular(100),
-                border:
-                    Border.all(color: AppTheme.amber.withOpacity(0.3), width: 1.5),
-              ),
-              child: const Row(
-                children: [
-                  Text('🔥', style: TextStyle(fontSize: 12)),
-                  SizedBox(width: 4),
-                  Text(
-                    '14',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700,
-                      color: AppTheme.amber,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 10),
-            const Text('❤️❤️❤️', style: TextStyle(fontSize: 13)),
           ],
         ),
       );
@@ -167,7 +142,7 @@ class _SignLessonScreenState extends State<SignLessonScreen>
                       const TextStyle(fontSize: 10, color: AppTheme.muted),
                 ),
                 const Text(
-                  'Greetings',
+                  'Alphabets A-Z',
                   style: TextStyle(fontSize: 10, color: AppTheme.muted),
                 ),
               ],
@@ -220,7 +195,7 @@ class _SignLessonScreenState extends State<SignLessonScreen>
             ),
             const SizedBox(height: 8),
             Text(
-              '${step.emoji} ${step.word}',
+              '${step.word}',
               style: GoogleFonts.outfit(
                 fontSize: 28,
                 fontWeight: FontWeight.w800,
@@ -232,7 +207,7 @@ class _SignLessonScreenState extends State<SignLessonScreen>
             ClipRRect(
               borderRadius: BorderRadius.circular(16),
               child: Container(
-                height: 100,
+                height: 240,
                 color: AppTheme.scaffoldDark,
                 child: Stack(
                   alignment: Alignment.center,
@@ -243,6 +218,21 @@ class _SignLessonScreenState extends State<SignLessonScreen>
                         border: Border.all(
                           color: AppTheme.slPrimary.withOpacity(0.2),
                           width: 2,
+                        ),
+                      ),
+                    ),
+                    Positioned.fill(
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.asset(
+                            'assets/images/sign_lang/${step.word.toUpperCase()}.png',
+                            fit: BoxFit.contain,
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Icon(Icons.image_not_supported, size: 48, color: AppTheme.slPrimary);
+                            },
+                          ),
                         ),
                       ),
                     ),
@@ -272,8 +262,6 @@ class _SignLessonScreenState extends State<SignLessonScreen>
                         ),
                       ),
                     ),
-                    const Text('🤚',
-                        style: TextStyle(fontSize: 48)),
                   ],
                 ),
               ),
@@ -343,7 +331,7 @@ class _SignLessonScreenState extends State<SignLessonScreen>
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            _isCorrect ? '✅ Correct! Great job!' : '❌ Try again',
+            _isCorrect ? 'Correct! Great job!' : 'Try again',
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w700,
@@ -356,60 +344,68 @@ class _SignLessonScreenState extends State<SignLessonScreen>
   }
 
   Widget _buildStepChips() {
-    LessonStatus statusForIndex(int i) {
-      if (i < _currentStep) return LessonStatus.completed;
-      if (i == _currentStep) return LessonStatus.inProgress;
-      return LessonStatus.locked;
-    }
-
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.symmetric(horizontal: 14),
       child: Row(
         children: List.generate(_steps.length, (i) {
-          final s = statusForIndex(i);
-          final isDone = s == LessonStatus.completed;
-          final isNow = s == LessonStatus.inProgress;
-          return Container(
-            margin: const EdgeInsets.only(right: 8),
-            padding:
-                const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-            decoration: BoxDecoration(
-              color: isDone
-                  ? AppTheme.slPrimary
-                  : isNow
-                      ? AppTheme.slPrimary.withOpacity(0.1)
-                      : AppTheme.cardDark,
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(
-                color: isDone
-                    ? AppTheme.slPrimary
-                    : isNow
-                        ? AppTheme.slPrimary.withOpacity(0.4)
-                        : AppTheme.border,
-                width: 1.5,
+          final isSelected = i == _currentStep;
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                _currentStep = i;
+                _isCorrect = false;
+                _isScanning = false;
+              });
+            },
+            child: Container(
+              margin: const EdgeInsets.only(right: 8),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? AppTheme.slPrimary.withOpacity(0.15)
+                    : AppTheme.cardDark,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(
+                  color: isSelected
+                      ? AppTheme.slPrimary
+                      : AppTheme.border,
+                  width: 1.5,
+                ),
               ),
-            ),
-            child: Column(
-              children: [
-                Text(
-                  isDone ? '✅' : isNow ? _steps[i].emoji : '🔒',
-                  style: const TextStyle(fontSize: 16),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  _steps[i].word,
-                  style: TextStyle(
-                    fontSize: 9,
-                    fontWeight: FontWeight.w700,
-                    color: isDone
-                        ? Colors.white
-                        : isNow
-                            ? AppTheme.slPrimaryMid
-                            : AppTheme.muted,
+              child: Column(
+                children: [
+                  Opacity(
+                    opacity: isSelected ? 1.0 : 0.5,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: Image.asset(
+                        'assets/images/sign_lang/${_steps[i].word.toUpperCase()}.png',
+                        width: 24,
+                        height: 24,
+                        fit: BoxFit.contain,
+                        errorBuilder: (_, __, ___) => Icon(
+                          isSelected ? Icons.image : Icons.image_outlined,
+                          size: 16,
+                          color: isSelected ? AppTheme.slPrimary : AppTheme.muted.withOpacity(0.5),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 2),
+                  Text(
+                    _steps[i].word,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                      color: isSelected
+                          ? AppTheme.slPrimary
+                          : AppTheme.muted,
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         }),

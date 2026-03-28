@@ -83,7 +83,7 @@ class StorySelectScreen extends StatelessWidget {
             ),
             const Spacer(),
             Text(
-              '🕉️ Story Mode',
+              'Story Mode',
               style: GoogleFonts.outfit(
                 fontSize: 15,
                 fontWeight: FontWeight.w700,
@@ -209,7 +209,7 @@ class _StoryCardState extends State<_StoryCard>
                   padding: const EdgeInsets.all(18),
                   child: Row(
                     children: [
-                      // Emoji icon
+                      // Story icon
                       Container(
                         width: 56,
                         height: 56,
@@ -221,9 +221,10 @@ class _StoryCardState extends State<_StoryCard>
                           ),
                         ),
                         alignment: Alignment.center,
-                        child: Text(
-                          widget.story.emoji,
-                          style: const TextStyle(fontSize: 28),
+                        child: Icon(
+                          Icons.auto_stories_rounded,
+                          size: 28,
+                          color: AppTheme.ppPrimary,
                         ),
                       ),
                       const SizedBox(width: 14),
@@ -281,12 +282,12 @@ class _StoryCardState extends State<_StoryCard>
                             Row(
                               children: [
                                 _InfoChip(
-                                  icon: '📖',
+                                  iconData: Icons.menu_book_rounded,
                                   text: '${widget.story.sceneCount} scenes',
                                 ),
                                 const SizedBox(width: 8),
                                 const _InfoChip(
-                                  icon: '🤚',
+                                  iconData: Icons.back_hand_rounded,
                                   text: 'Gesture input',
                                 ),
                                 const Spacer(),
@@ -333,9 +334,9 @@ class _StoryCardState extends State<_StoryCard>
 }
 
 class _InfoChip extends StatelessWidget {
-  final String icon;
+  final IconData iconData;
   final String text;
-  const _InfoChip({required this.icon, required this.text});
+  const _InfoChip({required this.iconData, required this.text});
 
   @override
   Widget build(BuildContext context) {
@@ -349,7 +350,7 @@ class _InfoChip extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(icon, style: const TextStyle(fontSize: 10)),
+          Icon(iconData, size: 10, color: Colors.white.withOpacity(0.5)),
           const SizedBox(width: 4),
           Text(
             text,

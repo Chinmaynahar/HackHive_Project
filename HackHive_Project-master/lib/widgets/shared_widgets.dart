@@ -25,7 +25,7 @@ class SectionLabel extends StatelessWidget {
 
 // ── Stat chip (glassmorphic) ───────────────────
 class StatChip extends StatelessWidget {
-  final String emoji;
+  final IconData iconData;
   final String value;
   final String label;
   final Color bg;
@@ -34,7 +34,7 @@ class StatChip extends StatelessWidget {
 
   const StatChip({
     super.key,
-    required this.emoji,
+    required this.iconData,
     required this.value,
     required this.label,
     required this.bg,
@@ -52,7 +52,7 @@ class StatChip extends StatelessWidget {
         ),
         child: Column(
           children: [
-            Text(emoji, style: const TextStyle(fontSize: 16)),
+            Icon(iconData, size: 16, color: textColor),
             const SizedBox(height: 3),
             Text(
               value,
@@ -200,10 +200,10 @@ class LightBottomNav extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final items = [
-      ('🏠', 'Home'),
-      ('📚', 'Lessons'),
-      ('📊', 'Progress'),
-      ('👤', 'Profile'),
+      (Icons.home_rounded, 'Home'),
+      (Icons.menu_book_rounded, 'Lessons'),
+      (Icons.bar_chart_rounded, 'Progress'),
+      (Icons.person_rounded, 'Profile'),
     ];
     return Container(
       decoration: BoxDecoration(
@@ -224,7 +224,7 @@ class LightBottomNav extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(items[i].$1, style: const TextStyle(fontSize: 18)),
+                  Icon(items[i].$1, size: 18, color: active ? AppTheme.slPrimary : AppTheme.muted),
                   const SizedBox(height: 3),
                   Text(
                     items[i].$2,
@@ -268,10 +268,10 @@ class DarkBottomNav extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final items = [
-      ('🏠', 'Home'),
-      ('🎭', 'Stage'),
-      ('📖', 'Stories'),
-      ('👤', 'Profile'),
+      (Icons.home_rounded, 'Home'),
+      (Icons.theater_comedy_rounded, 'Stage'),
+      (Icons.auto_stories_rounded, 'Stories'),
+      (Icons.person_rounded, 'Profile'),
     ];
     return Container(
       decoration: BoxDecoration(
@@ -290,7 +290,7 @@ class DarkBottomNav extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(items[i].$1, style: const TextStyle(fontSize: 18)),
+                Icon(items[i].$1, size: 18, color: active ? AppTheme.ppPrimary : Colors.white.withOpacity(0.3)),
                 const SizedBox(height: 3),
                 Text(
                   items[i].$2,

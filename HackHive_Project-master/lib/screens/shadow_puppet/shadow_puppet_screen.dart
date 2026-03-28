@@ -16,7 +16,21 @@ class _ShadowPuppetScreenState extends State<ShadowPuppetScreen>
     with TickerProviderStateMixin {
   int _navIndex = 1;
   late List<PuppetCharacter> _chars;
-  final List<String> _sequence = List.from(DummyData.storySequence);
+  final List<String> _sequence = ['deer', 'tree', 'bird'];
+
+  IconData _getIconForPuppet(String id) {
+    switch (id) {
+      case 'tree': return Icons.park_rounded;
+      case 'deer': return Icons.pets_rounded;
+      case 'bird': return Icons.flutter_dash_rounded;
+      case 'snake': return Icons.gesture_rounded;
+      case 'butterfly': return Icons.filter_vintage_rounded;
+      case 'mountain': return Icons.landscape_rounded;
+      case 'wave': return Icons.water_rounded;
+      case 'lion': return Icons.pets_rounded;
+      default: return Icons.pets_rounded;
+    }
+  }
   bool _isPlayingStory = false;
 
   late AnimationController _floatController;
@@ -50,7 +64,7 @@ class _ShadowPuppetScreenState extends State<ShadowPuppetScreen>
     if (_sequence.length >= DummyData.maxSequenceLength) return;
     setState(() {
       char.isUsed = true;
-      _sequence.add(char.emoji);
+      _sequence.add(char.id);
     });
   }
 
@@ -81,7 +95,7 @@ class _ShadowPuppetScreenState extends State<ShadowPuppetScreen>
                     _buildSequenceBar(),
                     PrimaryButton(
                       label:
-                          _isPlayingStory ? '⏸ Playing...' : '▶  Play Story',
+                          _isPlayingStory ? 'Playing...' : 'Play Story',
                       onTap: _playStory,
                       color1: AppTheme.ppPrimary,
                       color2: const Color(0xFFFBBF24),
@@ -123,7 +137,7 @@ class _ShadowPuppetScreenState extends State<ShadowPuppetScreen>
             ),
             const Spacer(),
             Text(
-              '🎭 Story Stage',
+              'Story Stage',
               style: GoogleFonts.outfit(
                 fontSize: 15,
                 fontWeight: FontWeight.w700,
@@ -293,7 +307,7 @@ class _ShadowPuppetScreenState extends State<ShadowPuppetScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              '✨ AI STORY',
+              'AI STORY',
               style: TextStyle(
                 fontSize: 9,
                 fontWeight: FontWeight.w700,
@@ -346,7 +360,7 @@ class _ShadowPuppetScreenState extends State<ShadowPuppetScreen>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(c.emoji, style: const TextStyle(fontSize: 22)),
+                    Icon(_getIconForPuppet(c.id), size: 22, color: c.isUsed ? AppTheme.ppPrimary : Colors.white.withOpacity(0.5)),
                     const SizedBox(height: 4),
                     Text(
                       c.name,
@@ -405,8 +419,7 @@ class _ShadowPuppetScreenState extends State<ShadowPuppetScreen>
                   ),
                   alignment: Alignment.center,
                   child: hasItem
-                      ? Text(_sequence[i],
-                          style: const TextStyle(fontSize: 16))
+                      ? Icon(_getIconForPuppet(_sequence[i]), size: 16, color: AppTheme.ppPrimary)
                       : null,
                 ),
                 if (i < DummyData.maxSequenceLength - 1)
