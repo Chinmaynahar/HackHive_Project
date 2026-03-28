@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:audioplayers/audioplayers.dart';
 import '../../models/models.dart';
+import '../../services/elevenlabs_service.dart';
 import '../../theme/app_theme.dart';
 
 class StoryPlayScreen extends StatefulWidget {
@@ -34,6 +36,10 @@ class _StoryPlayScreenState extends State<StoryPlayScreen>
 
   // Cinematic transition
   bool _fadeToBlack = false;
+  // Audio (ElevenLabs)
+  final AudioPlayer _audioPlayer = AudioPlayer();
+  bool _isAudioPlaying = false;
+  bool _isAudioLoading = false;
 
   // Animations
   late AnimationController _fadeController;
@@ -90,6 +96,7 @@ class _StoryPlayScreenState extends State<StoryPlayScreen>
     _particleController.dispose();
     _chapterFadeCtrl.dispose();
     _stopwatch.stop();
+    _audioPlayer.dispose();
     super.dispose();
   }
 
@@ -109,6 +116,13 @@ class _StoryPlayScreenState extends State<StoryPlayScreen>
     });
 
     _choiceTimer?.cancel();
+    
+    // Handle TTS narration
+    if (_currentScene.narration.isNotEmpty) {
+      _speak(_currentScene.narration);
+    } else {
+      _stopAudio();
+    }
 
     // Show chapter card if applicable
     if (_currentScene.chapterTitle != null) {
@@ -322,7 +336,8 @@ class _StoryPlayScreenState extends State<StoryPlayScreen>
               ),
               const SizedBox(height: 24),
               GestureDetector(
-                onTap: () {
+                onTap: () async {
+                  await _stopAudio();
                   if (isRetry) {
                     Navigator.pop(context); // Close dialog
                     setState(() {
@@ -536,7 +551,10 @@ class _StoryPlayScreenState extends State<StoryPlayScreen>
         child: Row(
           children: [
             GestureDetector(
-              onTap: () => Navigator.pop(context),
+              onTap: () async {
+                await _stopAudio();
+                if (context.mounted) Navigator.pop(context);
+              },
               child: Container(
                 padding: const EdgeInsets.all(7),
                 decoration: BoxDecoration(
@@ -1105,6 +1123,61 @@ class _StoryPlayScreenState extends State<StoryPlayScreen>
         ),
       ),
     );
+  }
+
+  // --- ElevenLabs Audio Helpers --- //
+  Future<void> _speak(String text) async {
+    try {
+      if (text.isEmpty) return;
+      await _audioPlayer.stop();
+      if (mounted) setState(() => _isAudioLoading = true);
+
+      final audioBytes = await ElevenLabsService.getAudioBytes(text);
+      if (!mounted) return;
+
+      setState(() => _isAudioLoading = false);
+
+      // Guard: skip playback if audio bytes are null or empty
+      if (audioBytes == null || audioBytes.isEmpty) {
+        debugPrint('ElevenLabs: No audio bytes received, skipping playback');
+        if (mounted) setState(() => _isAudioPlaying = false);
+        return;
+      }
+
+      await _audioPlayer.play(BytesSource(audioBytes));
+      if (mounted) setState(() => _isAudioPlaying = true);
+
+      _audioPlayer.onPlayerComplete.listen((_) {
+        if (mounted) setState(() => _isAudioPlaying = false);
+      });
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isAudioLoading = false;
+          _isAudioPlaying = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Audio unavailable', style: const TextStyle(color: Colors.white, fontSize: 11)),
+            backgroundColor: Colors.red.shade900,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+      debugPrint('ElevenLabs error: $e');
+    }
+  }
+
+  Future<void> _stopAudio() async {
+    try {
+      await _audioPlayer.stop();
+      if (mounted) setState(() {
+        _isAudioPlaying = false;
+        _isAudioLoading = false;
+      });
+    } catch (e) {
+      debugPrint('Error stopping audio: $e');
+    }
   }
 }
 
