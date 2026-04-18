@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "884915595393",
+    "firebase_url": "https://aslglove-83efc-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "aslglove-83efc",
+    "storage_bucket": "aslglove-83efc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:884915595393:android:64e915b655bd770b528580",
+        "android_client_info": {
+          "package_name": "com.hackhive"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsPcTYRb9nMXBHMC1CIZrVyYjaUp937lU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

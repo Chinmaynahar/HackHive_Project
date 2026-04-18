@@ -1,0 +1,33 @@
+name: gloveai
+description: AI-Powered Smart Gesture Glove App
+
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  google_fonts: ^6.1.0
+  percent_indicator: ^4.2.3
+  animate_do: ^3.3.4
+  firebase_core: ^3.12.1
+  firebase_database: ^11.3.5
+  flutter_tts: ^3.8.3
+  http: ^1.2.0
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/sign_lang/
+    - assets/images/story_scenes/story1images/
+    - assets/images/story_scenes/story2images/
+    - assets/images/story_scenes/story3images/
